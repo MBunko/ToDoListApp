@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Add entry</title>
+    </head>
+    <body>
+        <div class='form'>
+            <form method='POST' action=''>
+                {{ form.hidden_tag() }}
+                {{ form.entry_name.label }} {{ form.entry_name }}
+                <br>
+                {{ form.status.label }} {{ form.status }}
+                <br>
+                {{ form.submit }}
+            {{ message }}
+            </form>
+        </div>
+    </body>
+</html>

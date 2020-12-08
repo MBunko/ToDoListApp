@@ -1,5 +1,9 @@
 from application import app, db
 from application.models import Todo
+from application.models import Add
+from flask import Flask, render_template, request
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
 
 @app.route('/add')
 def add():
@@ -8,14 +12,28 @@ def add():
     db.session.commit()
     return "Added new task to database"
 
-@app.route('/read')
-@app.route('/')
+@app.route('/read', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def read():
     all_tasks = Todo.query.all()
     tasks_string = ""
     for task in all_tasks:
         tasks_string += "<br>"+ str(task.id) + ". " + task.name+ "- " +task.status
-    return tasks_string
+    error=""
+    form=Add()
+    if request.method == 'POST':
+        entry_name = form.entry_name.data
+        status = form.status.data
+
+        if len(entry_name) == 0 or len(status) == 0:
+            error = "Please supply both task name and status"
+        else:
+            new_task = Todo(name=entry_name, status=status)
+            db.session.add(new_task)
+            db.session.commit()
+            return "thank you"
+
+    return render_template('add.html', form=form, message=error) +tasks_string
 
 @app.route('/update/<int:number>/<name>')
 def update(name, number):
@@ -42,6 +60,17 @@ def count():
     number = Todo.query.count()
     n2=str(number)
     return n2
+
+@app.route ('/complete')
+def comp():
+    all_tasks = Todo.query.all()
+    task_string=""
+    for task in all_tasks:
+        if task.status.lower()=="complete":
+            task_string += "<br>"+ str(task.id) + ". " + task.name+ "- " +task.status
+    return task_string
+
+
 
 @app.route('/status/<int:number>/<name>')
 def status(number, name):
