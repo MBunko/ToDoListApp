@@ -33,15 +33,16 @@ def read():
 
     return render_template('add.html', form=form) + render_template("index.html", title="Read", all_tasks=all_tasks)
 
-@app.route('/update/<int:number>/<name>')
-def update(name, number):
-    task = Todo.query.filter_by(id=number).first()
-    if task is not None:
-        task.name = name
+@app.route('/update/<int:id>', methods= ["GET", "POST"])
+def update(id):
+    form=Add()
+    task = Todo.query.filter_by(id=id).first()
+    if request.method =="POST":
+        task.name = form.entry_name.data
+        task.status=form.status.data
         db.session.commit()
-        return task.name
-    else:
-        return "entry does not exist"
+        return redirect(url_for("read"))
+    return render_template("update.html", form=form, title="Update", task=task)
 
 @app.route('/delete/<int:number>')
 def delete(number):
@@ -49,7 +50,7 @@ def delete(number):
     if task is not None:
         db.session.delete(task)
         db.session.commit()
-        return task.name
+        return redirect(url_for("read"))
     else:
         return "Entry does not exist"
 
