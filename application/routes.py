@@ -1,7 +1,7 @@
 from application import app, db
 from application.models import Todo
 from application.models import Add
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
@@ -17,9 +17,7 @@ def add():
 def read():
     all_tasks = Todo.query.all()
     tasks_string = ""
-    for task in all_tasks:
-        tasks_string += "<br>"+ str(task.id) + ". " + task.name+ "- " +task.status
-    error=""
+
     form=Add()
     if request.method == 'POST':
         entry_name = form.entry_name.data
@@ -31,9 +29,9 @@ def read():
             new_task = Todo(name=entry_name, status=status)
             db.session.add(new_task)
             db.session.commit()
-            return "thank you"
+            return redirect(url_for("read"))
 
-    return render_template('add.html', form=form, message=error) +tasks_string
+    return render_template('add.html', form=form) + render_template("index.html", title="Read", all_tasks=all_tasks)
 
 @app.route('/update/<int:number>/<name>')
 def update(name, number):
