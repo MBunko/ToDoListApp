@@ -60,14 +60,13 @@ def count():
     n2=str(number)
     return n2
 
-@app.route ('/complete')
-def comp():
-    all_tasks = Todo.query.all()
-    task_string=""
-    for task in all_tasks:
-        if task.status.lower()=="complete":
-            task_string += "<br>"+ str(task.id) + ". " + task.name+ "- " +task.status
-    return task_string
+@app.route ('/complete<int:id>', methods = ["GET", "POST"])
+def complete(id):
+    form=Add()
+    task = Todo.query.filter_by(id=id).first()
+    task.status="complete"
+    db.session.commit()
+    return redirect(url_for("read"))
 
 
 
