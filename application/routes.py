@@ -1,7 +1,7 @@
 from application import app, db
 from application.models import Todo
 from application.models import Add
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
@@ -17,9 +17,7 @@ def add():
 def read():
     all_tasks = Todo.query.all()
     tasks_string = ""
-    for task in all_tasks:
-        tasks_string += "<br>"+ str(task.id) + ". " + task.name+ "- " +task.status
-    error=""
+
     form=Add()
     if request.method == 'POST':
         entry_name = form.entry_name.data
@@ -31,19 +29,20 @@ def read():
             new_task = Todo(name=entry_name, status=status)
             db.session.add(new_task)
             db.session.commit()
-            return "thank you"
+            return redirect(url_for("read"))
 
-    return render_template('add.html', form=form, message=error) +tasks_string
+    return render_template('add.html', form=form) + render_template("index.html", title="Read", all_tasks=all_tasks)
 
-@app.route('/update/<int:number>/<name>')
-def update(name, number):
-    task = Todo.query.filter_by(id=number).first()
-    if task is not None:
-        task.name = name
+@app.route('/update/<int:id>', methods= ["GET", "POST"])
+def update(id):
+    form=Add()
+    task = Todo.query.filter_by(id=id).first()
+    if request.method =="POST":
+        task.name = form.entry_name.data
+        task.status=form.status.data
         db.session.commit()
-        return task.name
-    else:
-        return "entry does not exist"
+        return redirect(url_for("read"))
+    return render_template("update.html", form=form, title="Update", task=task)
 
 @app.route('/delete/<int:number>')
 def delete(number):
@@ -51,7 +50,7 @@ def delete(number):
     if task is not None:
         db.session.delete(task)
         db.session.commit()
-        return task.name
+        return redirect(url_for("read"))
     else:
         return "Entry does not exist"
 
@@ -61,14 +60,13 @@ def count():
     n2=str(number)
     return n2
 
-@app.route ('/complete')
-def comp():
-    all_tasks = Todo.query.all()
-    task_string=""
-    for task in all_tasks:
-        if task.status.lower()=="complete":
-            task_string += "<br>"+ str(task.id) + ". " + task.name+ "- " +task.status
-    return task_string
+@app.route ('/complete<int:id>', methods = ["GET", "POST"])
+def complete(id):
+    form=Add()
+    task = Todo.query.filter_by(id=id).first()
+    task.status="complete"
+    db.session.commit()
+    return redirect(url_for("read"))
 
 
 

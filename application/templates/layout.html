@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title>Todo List- {{ title }}</title>
+    </head>
+    <body>
+        <h1>Todo List- {{ title }}</h1>
+        <a href="{{ url_for('read') }}">Read</a>
+        <a href="{{ url_for('add') }}">Update</a>
+        {% block body %}
+        {% endblock body %}
+    </body>
+</html>
