@@ -10,7 +10,7 @@ def add():
     new_task = Todo(name="New task", status="Not started")
     db.session.add(new_task)
     db.session.commit()
-    return "Added new task to database"
+    return redirect(url_for("read"))
 
 @app.route('/read', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
