@@ -8,4 +8,5 @@ SQLalchemy
 WTForms
 pymysql
 pytest
-Flask-Testing
+flask-testing
+Werkzeug
