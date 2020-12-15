@@ -6,7 +6,7 @@ from application.models import Todo
 
 class Testbase(unittest.TestCase):
     def create_app(self):
-        app.config.update(SQLALCHEMY_DATABASE_URI="sqlite:///",
+        app.config.update(SQLALCHEMY_DATABASE_URI="getenv('DATABASE_URI')",
             SECRET_KEY='TEST_SECRET_KEY',
             DEBUG=True
         )
