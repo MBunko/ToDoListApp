@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+Flask-WTF
+itsdangerous
+Jinja2
+Markupsafe
+SQLalchemy
+WTForms
+pymysql
