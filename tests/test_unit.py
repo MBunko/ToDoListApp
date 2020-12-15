@@ -6,8 +6,8 @@ from application.models import Todo
 
 class Testbase(unittest.TestCase):
     def create_app(self):
-        app.config.update(SQLALCHEMY_DATABASE_URI="getenv('DATABASE_URI')",
-            SECRET_KEY='getenv('SECRET_KEY')',
+        app.config.update(SQLALCHEMY_DATABASE_URI= getenv('DATABASE_URI'),
+            SECRET_KEY= getenv('SECRET_KEY'),
             DEBUG=True
         )
         return app
