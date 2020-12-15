@@ -1,6 +1,6 @@
 import unittest
 from flask import url_for
-import Flask-Testing
+from flask_testing import TestCase
 from application import app, db
 from application.models import Todo
 
