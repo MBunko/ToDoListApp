@@ -8,3 +8,5 @@ SQLalchemy
 WTForms
 pymysql
 pytest
+flask_testing
+unittest
