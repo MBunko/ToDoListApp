@@ -7,3 +7,4 @@ Markupsafe
 SQLalchemy
 WTForms
 pymysql
+pytest
